@@ -4,6 +4,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+const mongoose=require('mongoose');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
@@ -24,6 +25,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 //setting up routes
 app.use('/', index);
 app.use('/users', users);
+
+mongoose.connect('mongodb://localhost:27017/feedback');
+var db = mongoose.connection;
+db.once('open', function () {
+  console.log("Connection to MongoDB succesful...");
+}).on('error', function (error) {
+  console.log("MongoDB connection error: ", error);
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
